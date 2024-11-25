@@ -1,3 +1,5 @@
+import math
+
 def gregory_newton(vx, vy, x):
     h = vx[1] - vx[0]
     z = x - vx[0]
