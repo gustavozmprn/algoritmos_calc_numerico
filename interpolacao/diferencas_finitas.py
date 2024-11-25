@@ -1,26 +1,27 @@
-def forward_difference(x_values, y_values, new_x):
-    n = len(x_values)
-    
-    # Encontrar o índice mais próximo no qual calcular a diferença para frente
-    index = min(range(n), key=lambda i: abs(x_values[i] - new_x))
-    
-    # Verificar se o índice não está no extremo direito da lista
-    if index < n - 1:
-        # Calcular a diferença para frente
-        h = x_values[index + 1] - x_values[index]
-        forward_diff = (y_values[index + 1] - y_values[index]) / h
-        
-        # Calcular o novo valor de y usando a diferença para frente
-        new_y = y_values[index] + forward_diff * (new_x - x_values[index])
-        
-        return new_y
-    else:
-        print("O novo valor de x está além do alcance da lista fornecida.")
+def gregory_newton(vx, vy, x):
+    h = vx[1] - vx[0]
+    z = x - vx[0]
+    n = len(vx)
+    d = [[0 for i in range(n)] for j in range(n)]
+    for i in range(n):
+        d[i][0] = vy[i]
+    c = n-1
+    for j in range(1, n):
+        for i in range(0, c):
+            d[i][j] = d[i+1][j-1] - d[i][j-1]
+        c-=1
+    pn = vy[0]
+    for i in range(1,n):
+        pi = (d[0][i] / math.factorial(i)) * z
+        for j in range(1, i):
+            pi *= z - j
+        pn += pi
+    return pn
 
 # Exemplo de uso
 x_values = [8, 12, 16, 20]
 y_values = [18, 23, 26, 21]
 new_x = 17
 
-result = forward_difference(x_values, y_values, new_x)
+result = gregory_newton(x_values, y_values, new_x)
 print(f"Para x = {new_x}, o valor aproximado de y é: {result}")
